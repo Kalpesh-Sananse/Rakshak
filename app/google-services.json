@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "815443830073",
+    "project_id": "rakshak-1e306",
+    "storage_bucket": "rakshak-1e306.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815443830073:android:7bb2d13bed96fc2ea134e8",
+        "android_client_info": {
+          "package_name": "com.kalpesh.women_safety"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-HnP4EAKCYLiFhZxYvSiJ-EK1eYP-pEg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

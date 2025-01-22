@@ -1,0 +1,35 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+    <ToggleButton
+        android:id="@+id/toggleVoiceSOS"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+
+        android:layout_margin="10px"
+        android:layout_height="wrap_content"
+        android:textOff="Enable Voice SOS"
+        android:textOn="Disable Voice SOS"
+        android:layout_centerInParent="true" />
+
+
+
+
+    <Button
+        android:id="@+id/btnManualSOS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Manual SOS"
+        android:layout_margin="36dp"
+        android:backgroundTint="@color/red"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:padding="12dp"/>
+
+
+</LinearLayout>
