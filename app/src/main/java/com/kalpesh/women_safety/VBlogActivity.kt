@@ -18,7 +18,10 @@ class VBlogActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_vblog)
-
+//<<<<<<< HEAD
+//=======
+//
+//>>>>>>> a0e03c72e5d506f03f37cd0b2f8c43f5e294d143
     }
 
     private fun fetchVideosFromFirebase() {
