@@ -267,10 +267,11 @@
         android:layout_width="match_parent"
         android:layout_height="72dp"
     android:layout_alignParentBottom="true"
-    android:background="@color/colorPrimary"
+    android:background="@color/app_default"
     app:itemIconSize="29dp"
     app:itemTextAppearanceActive="@style/BottomNavTextStyleActive"
     app:itemTextAppearanceInactive="@style/BottomNavTextStyleInactive"
-    app:menu="@menu/bottom_navigation" />
+    app:menu="@menu/bottom_navigation"
+        app:itemTextColor="@color/white"/>
 
 </RelativeLayout>
