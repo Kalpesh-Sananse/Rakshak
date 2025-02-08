@@ -1,11 +1,9 @@
 package com.kalpesh.women_safety
 
 import android.Manifest
+import android.R.attr
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.app.PendingIntent
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -28,6 +26,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+
 
 class MainActivityy : AppCompatActivity() {
 
@@ -242,8 +241,8 @@ class MainActivityy : AppCompatActivity() {
             }
         }
     }
-
-    private fun sendSOSAlert(location: Location) {
+    // Function to Send SOS Alert
+    fun sendSOSAlert(location: Location) {
         val userId = auth.currentUser?.uid ?: return
         val sosData = mapOf(
             "latitude" to location.latitude,
@@ -256,81 +255,66 @@ class MainActivityy : AppCompatActivity() {
             val emergencyContact1 = dataSnapshot.child("emergencyContact1").value?.toString()
             val emergencyContact2 = dataSnapshot.child("emergencyContact2").value?.toString()
 
-            if (emergencyContact1 != null || emergencyContact2 != null) {
-                val message = "🚨 SOS Alert!\n" +
-                        "Latitude: ${location.latitude}, Longitude: ${location.longitude}\n" +
-                        "Google Maps Link: https://maps.google.com/?q=${location.latitude},${location.longitude}\n" +
-                        "Please send help immediately!"
-
-                emergencyContact1?.let { sendSMSWithReceiver(it, message) }
-                emergencyContact2?.let { sendSMSWithReceiver(it, message) }
+            if (emergencyContact1.isNullOrEmpty() && emergencyContact2.isNullOrEmpty()) {
+                Toast.makeText(this@MainActivityy, "No emergency contacts found!", Toast.LENGTH_SHORT).show()
+                return@addOnSuccessListener
             }
 
-            // Save the SOS alert data to Firebase
+            val message = """
+                🚨 SOS Alert!
+                Latitude: ${location.latitude}, Longitude: ${location.longitude}
+                Google Maps: https://maps.google.com/?q=${location.latitude},${location.longitude}
+                Please send help immediately!
+            """.trimIndent()
+
+            // Sending SMS
+            emergencyContact1?.let { sendSMS(it, message) }
+            emergencyContact2?.let { sendSMS(it, message) }
+
+            // Save SOS Data to Firebase
             database.reference.child("sos_alerts").push().setValue(sosData)
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
-                        showSuccessDialog()
+                        Toast.makeText(this@MainActivityy, "SOS Alert Sent Successfully!", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(this, "Failed to send SOS alert.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivityy, "Failed to send SOS alert.", Toast.LENGTH_SHORT).show()
                     }
                 }
         }.addOnFailureListener {
-            Toast.makeText(this, "Failed to fetch user data.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivityy, "Failed to fetch user data.", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun sendSMSWithReceiver(phoneNumber: String, message: String) {
+    // Function to Send SMS
+    private fun sendSMS(phoneNumber: String, message: String) {
+        if (ContextCompat.checkSelfPermission(this@MainActivityy, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            requestSmsPermission()
+            return
+        }
+
         try {
             val smsManager = SmsManager.getDefault()
-
-            // Create a PendingIntent to listen for SMS sent event
-            val sentIntent = PendingIntent.getBroadcast(
-                this,
-                0,
-                Intent("SMS_SENT"),
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-
-            // Create a PendingIntent to listen for SMS delivery event
-            val deliveredIntent = PendingIntent.getBroadcast(
-                this,
-                0,
-                Intent("SMS_DELIVERED"),
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-
-            // Send the SMS
-            smsManager.sendTextMessage(phoneNumber, null, message, sentIntent, deliveredIntent)
-
-            // Register the receivers for both sent and delivered events
-            registerReceiver(object : BroadcastReceiver() {
-                override fun onReceive(context: Context?, intent: Intent?) {
-                    when (resultCode) {
-                        RESULT_OK -> Toast.makeText(context, "SMS sent to $phoneNumber", Toast.LENGTH_SHORT).show()
-                        SmsManager.RESULT_ERROR_GENERIC_FAILURE -> Toast.makeText(context, "Generic failure", Toast.LENGTH_SHORT).show()
-                        SmsManager.RESULT_ERROR_NO_SERVICE -> Toast.makeText(context, "No service available", Toast.LENGTH_SHORT).show()
-                        SmsManager.RESULT_ERROR_NULL_PDU -> Toast.makeText(context, "Null PDU", Toast.LENGTH_SHORT).show()
-                        SmsManager.RESULT_ERROR_RADIO_OFF -> Toast.makeText(context, "Radio off", Toast.LENGTH_SHORT).show()
-                    }
-                    unregisterReceiver(this) // Unregister the receiver after receiving result
-                }
-            }, IntentFilter("SMS_SENT"))
-
-            registerReceiver(object : BroadcastReceiver() {
-                override fun onReceive(context: Context?, intent: Intent?) {
-                    when (resultCode) {
-                        RESULT_OK -> Toast.makeText(context, "SMS delivered", Toast.LENGTH_SHORT).show()
-                        RESULT_CANCELED -> Toast.makeText(context, "SMS not delivered", Toast.LENGTH_SHORT).show()
-                    }
-                    unregisterReceiver(this) // Unregister the receiver after receiving result
-                }
-            }, IntentFilter("SMS_DELIVERED"))
-
+            smsManager.sendTextMessage(phoneNumber, null, message, null, null)
+            Toast.makeText(this@MainActivityy, "SOS SMS Sent to $phoneNumber!", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
-            Log.e("SOS", "Error sending SMS: ${e.message}")
+            Toast.makeText(this@MainActivityy, "Failed to send SMS: ${e.message}", Toast.LENGTH_SHORT).show()
+            openSMSApp(phoneNumber, message) // Backup option to open SMS App
         }
     }
+
+    // Function to Request SMS Permission
+    private fun requestSmsPermission() {
+        ActivityCompat.requestPermissions(this@MainActivityy, arrayOf(Manifest.permission.SEND_SMS), 100)
+    }
+
+    // Backup Function: Open Default SMS App
+    private fun openSMSApp(phoneNumber: String, message: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:$phoneNumber"))
+        intent.putExtra("sms_body", message)
+        this@MainActivityy.startActivity(intent)
+    }
+
+
 
     private fun showSuccessDialog() {
         val builder = AlertDialog.Builder(this)
