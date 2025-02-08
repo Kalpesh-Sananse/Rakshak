@@ -178,12 +178,16 @@
                     Toast.makeText(this, "Voice SOS Disabled", Toast.LENGTH_SHORT).show()
                 }
             }
+            private val languages = listOf("en-US", "hi-IN", "mr-IN")
+            private var currentLanguageIndex = 0
 
             private fun startVoiceRecognition() {
+                val selectedLanguage = languages[currentLanguageIndex]
+
                 val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
                     putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-
+                    putExtra(RecognizerIntent.EXTRA_LANGUAGE, selectedLanguage)
+                    putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
                 }
 
                 speechRecognizer.setRecognitionListener(object : RecognitionListener {
