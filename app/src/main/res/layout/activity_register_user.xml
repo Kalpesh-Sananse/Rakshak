@@ -53,7 +53,7 @@
                         android:layout_marginTop="10dp"
                         android:fontFamily="@font/f6"
                         android:gravity="center"
-                        android:text="Sign Up"
+                        android:text="Register"
                         android:textColor="@color/white"
                         android:textSize="30dp"
                         android:textStyle="bold" />
@@ -225,7 +225,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/login_btn"
-                        android:text="Sign Up"
+                        android:text="Register"
                         android:textColor="@color/white"
                         android:textSize="20dp" />
                 </androidx.cardview.widget.CardView>
