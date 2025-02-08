@@ -117,10 +117,13 @@ class MainActivityy : AppCompatActivity() {
                 }
                 R.id.nav_chatbot -> {
                     try {
-                        val url = "https://wa.me/+14155238886?text=Hello" // Your WhatsApp number
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(url)
+                        val intent = Intent(this, ChatbotActivity::class.java)
                         startActivity(intent)
+                        true
+//                        val url = "https://wa.me/+14155238886?text=Hello" // Your WhatsApp number
+//                        val intent = Intent(Intent.ACTION_VIEW)
+//                        intent.data = Uri.parse(url)
+//                        startActivity(intent)
 
                     } catch (e: Exception) {
                         Toast.makeText(this, "WhatsApp is not installed!", Toast.LENGTH_SHORT).show()

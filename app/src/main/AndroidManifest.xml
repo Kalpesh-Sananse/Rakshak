@@ -18,7 +18,11 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.front" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature
         android:name="android.hardware.location"
         android:required="true" />
@@ -42,6 +46,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Women_safety"
         tools:targetApi="31">
+        <activity
+            android:name=".ErisActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChatbotActivity"
+            android:exported="false" />
         <activity
             android:name=".HealthParamterActivity"
             android:exported="false" />
