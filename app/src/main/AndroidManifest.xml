@@ -5,15 +5,18 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.VIBRATE" /> <!-- Optional for API Level 31+ -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" /> <!-- Features Section -->
-
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <uses-feature
@@ -25,6 +28,9 @@
     <uses-feature
         android:name="android.hardware.microphone"
         android:required="true" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -37,10 +43,10 @@
         android:theme="@style/Theme.Women_safety"
         tools:targetApi="31">
         <activity
-            android:name=".login_activity"
+            android:name=".VBlogActivity"
             android:exported="false" />
         <activity
-            android:name=".register_user"
+            android:name=".SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,14 +55,29 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".fullblogActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BlogActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NearbyDoctorsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NearbyDoctors"
+            android:exported="false" />
+        <activity
+            android:name=".login_activity"
+            android:exported="false" />
+        <activity
+            android:name=".register_user"
+            android:exported="false"></activity>
+        <activity
             android:name=".profileActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivityy"
-            android:exported="false"></activity>
-
-
+            android:exported="false" />
     </application>
-
 
 </manifest>

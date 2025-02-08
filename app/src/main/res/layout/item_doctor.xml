@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp"
+   >
+
+    <!-- Doctor Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="@drawable/card_background"
+        android:layout_marginBottom="10dp"
+        android:elevation="4dp">
+
+        <!-- Left Section -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/doctorName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dr. Kalpesh Sananse"
+                android:textSize="16sp"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/distanceText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Distance: 1.5 km"
+                android:textSize="14sp"
+                android:textColor="#6200EE"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/doctorContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contact: 8767932356"
+                android:textSize="14sp"
+                android:textColor="#757575" />
+        </LinearLayout>
+
+        <!-- Right Section -->
+        <Button
+            android:id="@+id/locateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Locate"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#6200EE"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="8dp"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+</LinearLayout>

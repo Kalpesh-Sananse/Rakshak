@@ -1,0 +1,13 @@
+<resources>
+    <!-- Active item text style -->
+    <style name="BottomNavTextStyleActive" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!-- Inactive item text style -->
+    <style name="BottomNavTextStyleInactive" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/bottomnavbg</item>
+    </style>
+</resources>

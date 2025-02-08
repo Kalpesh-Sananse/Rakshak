@@ -4,6 +4,27 @@
     <color name="white">#FFFFFFFF</color>
     <color  name="red" >#FFFF0000</color>
     <color name="backgroundColor">#F5F5F5</color> <!-- Light background -->
-    <color name="primaryColor">#6200EE</color> <!-- Purple for button -->
+    <color name="primaryColor">#A17FD1</color> <!-- Purple for button -->
     <color name="primaryTextColor">#000000</color> <!-- Black text -->
+    <!-- Primary Color -->
+    <color name="colorPrimary">#cdbfd6</color> <!-- Purple -->
+    <color name="colorPrimaryDark">#3700B3</color> <!-- Dark Purple -->
+    <color name="colorAccent">#03DAC5</color> <!-- Teal -->
+    <color name="bottomnavbg">#734688</color>
+    <!-- Text Colors -->
+    <color name="textPrimary">#000000</color> <!-- Black -->
+    <color name="textSecondary">#808080</color> <!-- Gray -->
+
+
+    <!-- Card Background and Button Colors -->
+    <color name="cardBackground">#FFFFFF</color> <!-- White -->
+    <color name="buttonBackground">#6200EE</color> <!-- Purple -->
+    <color name="buttonTextColor">#FFFFFF</color> <!-- White -->
+
+    <!-- SOS Button and Alerts -->
+
+
+    <!-- Other Colors -->
+    <color name="lightGray">#F5F5F5</color> <!-- Light gray for backgrounds -->
+
 </resources>

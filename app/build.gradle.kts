@@ -44,10 +44,6 @@ android {
 }
 
 dependencies {
-
-
-
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -61,12 +57,23 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:4.11.0") // For OkHttp
     implementation  ("com.squareup.retrofit2:retrofit:2.9.0") // For Retrofit
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0") // Optional for JSON parsing
-
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
     implementation ("androidx.core:core-ktx:1.9.0")
     implementation ("com.google.firebase:firebase-auth:21.4.3")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.squareup.picasso:picasso:2.8")
     implementation ("androidx.core:core:1.9.0")
+    implementation("io.coil-kt:coil:2.4.0")
+    implementation("io.coil-kt:coil-base:2.4.0") // Optional for basic image loading
+
+    implementation ("com.google.firebase:firebase-database:20.2.2")
+    implementation( "com.github.bumptech.glide:glide:4.15.1")
+    implementation("io.coil-kt:coil:2.4.0")
+
+
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.volley)
 
 
     testImplementation(libs.junit)
