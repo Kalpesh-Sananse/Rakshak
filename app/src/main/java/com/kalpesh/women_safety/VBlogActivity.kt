@@ -12,22 +12,13 @@ import com.google.firebase.database.*
 class VBlogActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var videoAdapter: VideoAdapter
+   // private lateinit var videoAdapter: VideoAdapter
     private val videoList = mutableListOf<Videos>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_vblog)
 
-        recyclerView = findViewById(R.id.videoRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        videoAdapter = VideoAdapter(videoList) { videoUrl ->
-            openVideo(videoUrl)
-        }
-        recyclerView.adapter = videoAdapter
-
-        fetchVideosFromFirebase()
     }
 
     private fun fetchVideosFromFirebase() {
@@ -42,7 +33,7 @@ class VBlogActivity : AppCompatActivity() {
                         videoList.add(video)
                     }
                 }
-                videoAdapter.notifyDataSetChanged()
+
             }
 
             override fun onCancelled(error: DatabaseError) {

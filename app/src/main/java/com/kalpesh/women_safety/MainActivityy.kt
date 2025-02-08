@@ -264,6 +264,7 @@ class MainActivityy : AppCompatActivity() {
 
                 emergencyContact1?.let { sendSMSWithReceiver(it, message) }
                 emergencyContact2?.let { sendSMSWithReceiver(it, message) }
+
             }
 
             // Save the SOS alert data to Firebase
@@ -281,30 +282,31 @@ class MainActivityy : AppCompatActivity() {
     }
 
     private fun sendSMSWithReceiver(phoneNumber: String, message: String) {
+        val context = this // Use `this` in Activity, or `requireContext()` in Fragment
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            Toast.makeText(context, "SMS permission not granted", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         try {
             val smsManager = SmsManager.getDefault()
 
-            // Create a PendingIntent to listen for SMS sent event
             val sentIntent = PendingIntent.getBroadcast(
-                this,
-                0,
-                Intent("SMS_SENT"),
+                context, 0, Intent("SMS_SENT"),
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
-            // Create a PendingIntent to listen for SMS delivery event
             val deliveredIntent = PendingIntent.getBroadcast(
-                this,
-                0,
-                Intent("SMS_DELIVERED"),
+                context, 0, Intent("SMS_DELIVERED"),
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
-            // Send the SMS
             smsManager.sendTextMessage(phoneNumber, null, message, sentIntent, deliveredIntent)
 
-            // Register the receivers for both sent and delivered events
-            registerReceiver(object : BroadcastReceiver() {
+            val sentReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
                     when (resultCode) {
                         RESULT_OK -> Toast.makeText(context, "SMS sent to $phoneNumber", Toast.LENGTH_SHORT).show()
@@ -313,24 +315,29 @@ class MainActivityy : AppCompatActivity() {
                         SmsManager.RESULT_ERROR_NULL_PDU -> Toast.makeText(context, "Null PDU", Toast.LENGTH_SHORT).show()
                         SmsManager.RESULT_ERROR_RADIO_OFF -> Toast.makeText(context, "Radio off", Toast.LENGTH_SHORT).show()
                     }
-                    unregisterReceiver(this) // Unregister the receiver after receiving result
+                    context?.unregisterReceiver(this)
                 }
-            }, IntentFilter("SMS_SENT"))
+            }
 
-            registerReceiver(object : BroadcastReceiver() {
+            val deliveredReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
                     when (resultCode) {
                         RESULT_OK -> Toast.makeText(context, "SMS delivered", Toast.LENGTH_SHORT).show()
                         RESULT_CANCELED -> Toast.makeText(context, "SMS not delivered", Toast.LENGTH_SHORT).show()
                     }
-                    unregisterReceiver(this) // Unregister the receiver after receiving result
+                    context?.unregisterReceiver(this)
                 }
-            }, IntentFilter("SMS_DELIVERED"))
+            }
+
+            context.registerReceiver(sentReceiver, IntentFilter("SMS_SENT"))
+            context.registerReceiver(deliveredReceiver, IntentFilter("SMS_DELIVERED"))
 
         } catch (e: Exception) {
             Log.e("SOS", "Error sending SMS: ${e.message}")
+            Toast.makeText(this, "Failed to send SMS", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     private fun showSuccessDialog() {
         val builder = AlertDialog.Builder(this)
