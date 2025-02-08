@@ -197,11 +197,11 @@
                             android:layout_gravity="center"
                             android:layout_marginTop="10dp"
                             android:background="@drawable/login_button"
-                            android:padding="14p"
+                            android:padding="14dp"
                             android:text="Sign Up."
                             android:textAllCaps="false"
                             android:textColor="@color/white"
-                            android:textSize="15dp" />
+                            android:textSize="14dp" />
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
