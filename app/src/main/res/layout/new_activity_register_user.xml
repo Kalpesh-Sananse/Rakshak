@@ -198,7 +198,7 @@
                             android:layout_marginTop="10dp"
                             android:background="@drawable/login_button"
                             android:padding="13dp"
-                            android:text="Sign Up"
+                            android:text="Sign Up."
                             android:textAllCaps="false"
                             android:textColor="@color/white"
                             android:textSize="15dp" />
