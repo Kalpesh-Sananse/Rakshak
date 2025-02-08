@@ -99,7 +99,6 @@
                     startActivity(intent)
                 }
 
-
                 // Bottom Navigation
                 val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
                 bottomNavigationView.setOnItemSelectedListener { item ->
@@ -135,7 +134,6 @@
                         else -> false
                     }
                 }
-
             }
 
             private fun hasPermissions(): Boolean {

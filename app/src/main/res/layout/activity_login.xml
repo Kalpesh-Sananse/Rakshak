@@ -1,91 +1,199 @@
-
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
     tools:context=".login_activity"
-    android:padding="16dp">
+    android:orientation="vertical"
+    android:background="@color/app_background">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="20dp"
-        android:paddingTop="10dp"
-        android:gravity="center_horizontal">
+        android:layout_height="match_parent">
 
-        <!-- Title -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Login"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textColor="@color/primaryTextColor"
-            android:layout_marginBottom="24dp" />
-
-        <!-- Email Field -->
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email Address"
-            android:layout_marginBottom="16dp">
+            android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etEmail"
+            <!-- Login Background Section -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:paddingBottom="120dp"
+                android:layout_marginLeft="-10dp"
+                android:layout_marginRight="-10dp"
+                android:background="@drawable/login_bg"
+                android:orientation="vertical"
+                android:paddingTop="60dp">
 
-        <!-- Password Field -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Password"
-            android:layout_marginBottom="16dp">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    app:srcCompat="@drawable/safe" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etPassword"
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/f6"
+                    android:gravity="center"
+                    android:text="Welcome"
+                    android:textColor="@color/white"
+                    android:textSize="30dp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- CardView for Login Form -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="vertical"
+                android:layout_marginTop="-80dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                app:contentPaddingBottom="60dp"
+                app:cardCornerRadius="30dp"
+                app:cardBackgroundColor="@color/app_background"
+                android:outlineSpotShadowColor="#000000"
+                app:cardElevation="10dp">
 
-        <!-- Login Button -->
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/primaryColor"
-            android:text="Login"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:elevation="4dp"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp">
 
-        <!-- Forgot Password Link -->
-        <TextView
-            android:id="@+id/tvForgotPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Forgot Password?"
-            android:textColor="@color/primaryColor"
-            android:textStyle="italic"
-            android:layout_marginBottom="16dp"
-            android:gravity="center"/>
+                    <!-- Error Message -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/f6"
+                        android:gravity="center"
+                        android:text=""
+                        android:textColor="@color/input_text_error" />
 
-        <!-- Redirect to Register Screen -->
-        <TextView
-            android:id="@+id/tvRegister"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Don't have an account? Register here"
-            android:textColor="@color/primaryColor"
-            android:gravity="center" />
-    </LinearLayout>
-</ScrollView>
+                    <!-- Email Field -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:boxBackgroundMode="outline"
+                        app:endIconMode="clear_text"
+                        app:startIconTint="#878787"
+                        app:endIconTint="#878787"
+                        app:startIconDrawable="@drawable/ic_baseline_verified_user_24"
+                        app:hintEnabled="false">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@id/etEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/login_input"
+                            android:ems="10"
+                            android:fontFamily="@font/f6"
+                            android:hint="Email Address"
+                            android:inputType="textEmailAddress"
+                            android:padding="20dp"
+                            android:textColorHint="#878787"
+                            android:textCursorDrawable="@drawable/cursor_drawable" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Password Field -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        app:boxBackgroundMode="outline"
+                        app:startIconDrawable="@drawable/ic_baseline_vpn_key_24"
+                        app:endIconMode="password_toggle"
+                        app:startIconTint="#878787"
+                        app:endIconTint="#878787"
+                        app:hintEnabled="false">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@id/etPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/login_input"
+                            android:ems="10"
+                            android:fontFamily="@font/f6"
+                            android:hint="Password"
+                            android:inputType="textPassword"
+                            android:padding="20dp"
+                            android:textColorHint="#878787"
+                            android:textCursorDrawable="@drawable/cursor_drawable" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Forgot Password Link -->
+                    <TextView
+                        android:id="@+id/tvForgotPassword"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="15dp"
+                        android:fontFamily="@font/f6"
+                        android:padding="5dp"
+                        android:text="Forgot Password?"
+                        android:textColor="@color/app_default" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Login Button -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/login_btn"
+                android:layout_marginTop="-30dp"
+                app:cardCornerRadius="30dp"
+                android:outlineSpotShadowColor="#00FFFFFF"
+                app:cardElevation="10dp">
+
+                <Button
+                    android:id="@+id/btnLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/login_btn"
+                    android:fontFamily="@font/f6"
+                    android:gravity="center"
+                    android:padding="18dp"
+                    android:text="Login"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
+            </androidx.cardview.widget.CardView>
+
+            <!-- Redirect to Register Screen -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="30dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:fontFamily="@font/f6"
+                    android:text="Don't have an account?" />
+
+                <TextView
+                    android:id="@+id/tvRegister"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/f6"
+                    android:text="Register here"
+                    android:textColor="@color/app_default" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
