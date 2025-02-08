@@ -31,7 +31,8 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/safe"
-                    android:contentDescription="Profile Picture" />
+                    android:contentDescription="Profile Picture"
+                    app:tint="@color/app_default" />
 
                 <!-- App Title -->
                 <TextView
@@ -44,13 +45,13 @@
                     android:text="Rakshak"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textColor="#FFB100" />
+                    android:textColor="@color/app_default" />
 
                 <!-- Location Icon -->
                 <ImageView
                     android:id="@+id/location_icon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="56dp"
                     android:layout_centerVertical="true"
@@ -60,8 +61,8 @@
                 <!-- Notification Icon -->
                 <ImageView
                     android:id="@+id/notification_icon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/baseline_notifications_none_24"
@@ -106,9 +107,9 @@
                             android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:text="Emergency Contacts"
-                            android:textColor="#FFC107"
-                            android:textStyle="bold"
-                            android:textSize="14sp" />
+                            android:textColor="@color/app_default"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -139,9 +140,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="Nearby Hospital"
                             android:gravity="center"
-                            android:textColor="#FFC107"
+                            android:text="Nearby Hospital"
+                            android:textColor="@color/app_default"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -174,9 +175,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="Call Police"
-                            android:textColor="#FFC107"
                             android:gravity="center"
+                            android:text="Call Police"
+                            android:textColor="@color/app_default"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -209,6 +210,7 @@
 
                 <!-- ImageButton on the Right -->
                 <ImageButton
+                    android:id="@+id/personalinfobtn"
                     android:background="#00FFFFFF"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -224,7 +226,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="30dp"
-                android:backgroundTint="@color/red"
+                android:backgroundTint="#C30000"
                 android:background="@drawable/rounded_btn"
                 android:textOff="OFF"
                 android:textOn="ON"
