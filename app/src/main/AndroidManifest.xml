@@ -43,6 +43,9 @@
         android:theme="@style/Theme.Women_safety"
         tools:targetApi="31">
         <activity
+            android:name=".HealthParamterActivity"
+            android:exported="false" />
+        <activity
             android:name=".VBlogActivity"
             android:exported="false" />
         <activity
@@ -71,7 +74,7 @@
             android:exported="false" />
         <activity
             android:name=".register_user"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".profileActivity"
             android:exported="false" />
