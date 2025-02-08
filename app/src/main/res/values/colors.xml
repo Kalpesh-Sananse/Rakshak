@@ -14,7 +14,9 @@
     <!-- Text Colors -->
     <color name="textPrimary">#000000</color> <!-- Black -->
     <color name="textSecondary">#808080</color> <!-- Gray -->
-
+    <color name="gradient_start">#6393C5</color>
+    <color name="gradient_end">#0061C3</color>
+    <color name="cardcolour">#FFFFFFFF</color>
 
     <!-- Card Background and Button Colors -->
     <color name="cardBackground">#FFFFFF</color> <!-- White -->
