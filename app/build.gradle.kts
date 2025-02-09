@@ -69,6 +69,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-database:20.2.2")
     implementation( "com.github.bumptech.glide:glide:4.15.1")
     implementation("io.coil-kt:coil:2.4.0")
+    implementation(libs.androidx.lifecycle.service)
 
     val cameraxVersion = "1.3.1"
     implementation("androidx.camera:camera-core:$cameraxVersion")

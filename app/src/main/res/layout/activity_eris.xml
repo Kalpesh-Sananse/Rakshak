@@ -18,7 +18,7 @@
         android:layout_margin="16dp"
         android:background="#80000000"
         android:padding="8dp"
-        android:text="No gesture detected"
+        android:text="Ready to calibrate"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -53,6 +53,7 @@
             android:layout_marginTop="8dp"
             android:text="Tap 'Calibrate' and blink 3 times to set your SOS pattern"
             android:textAlignment="center" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
