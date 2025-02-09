@@ -1,4 +1,8 @@
 <resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Enable full-screen layout -->
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
     <!-- Active item text style -->
     <style name="BottomNavTextStyleActive" parent="TextAppearance.AppCompat">
         <item name="android:textSize">12sp</item>

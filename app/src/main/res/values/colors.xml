@@ -14,8 +14,8 @@
     <!-- Text Colors -->
     <color name="textPrimary">#000000</color> <!-- Black -->
     <color name="textSecondary">#808080</color> <!-- Gray -->
-    <color name="gradient_start">#6393C5</color>
-    <color name="gradient_end">#0061C3</color>
+<!--    <color name="gradient_start">#6393C5</color>-->
+<!--    <color name="gradient_end">#0061C3</color>-->
     <color name="cardcolour">#FFFFFFFF</color>
 
     <!-- Card Background and Button Colors -->
@@ -29,4 +29,25 @@
     <!-- Other Colors -->
     <color name="lightGray">#F5F5F5</color> <!-- Light gray for backgrounds -->
 
+
+<!--    my color-->
+    <color name="mobile_status">#0061C3</color>
+    <color name="app_input">#EAEAEA</color>
+    <color name="input_text_error">#fc5722</color>
+
+    <color name="disallow_img">#fc5722</color>
+    <color name="allow_img">#4CAF50</color>
+
+    <color name="app_default">#0061C3</color>
+    <color name="gradient_start">#0061C3</color>
+    <color name="gradient_end">#0061C3</color>
+    <color name="app_background">#FFFFFFFF</color>
+    <color name="list_background">#FFFFFF</color>
+
+    <!--    For items colors-->
+    <color name="items_text">#002549</color>
+    <color name="items_drawable_tint">#0061C3</color>
+    <color name="items_image_tint">#002549</color>
+
+    <color name="shimmer_color">#D5D5D5</color>
 </resources>

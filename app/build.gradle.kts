@@ -69,8 +69,22 @@ dependencies {
     implementation ("com.google.firebase:firebase-database:20.2.2")
     implementation( "com.github.bumptech.glide:glide:4.15.1")
     implementation("io.coil-kt:coil:2.4.0")
+    implementation(libs.androidx.lifecycle.service)
 
+    val cameraxVersion = "1.3.1"
+    implementation("androidx.camera:camera-core:$cameraxVersion")
+    implementation("androidx.camera:camera-camera2:$cameraxVersion")
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation("androidx.camera:camera-view:$cameraxVersion")
 
+    // ML Kit
+    implementation("com.google.mlkit:face-detection:16.1.5")
+
+    // Other dependencies
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation(libs.firebase.auth.ktx)
     implementation(libs.androidx.recyclerview)
     implementation(libs.volley)
