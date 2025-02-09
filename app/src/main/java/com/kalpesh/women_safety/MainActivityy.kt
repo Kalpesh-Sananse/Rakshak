@@ -131,7 +131,7 @@ class MainActivityy : AppCompatActivity() {
                     true
                 }
                 R.id.nav_profilee -> {
-                    val intent = Intent(this, HealthParamterActivity::class.java) // Replace with your ProfileActivity
+                    val intent = Intent(this, ErisActivity::class.java) // Replace with your ProfileActivity
                     startActivity(intent)
                     true
                 }
@@ -278,8 +278,7 @@ class MainActivityy : AppCompatActivity() {
             "userId" to userId
         )
 
-        database.reference.child("Users").child(userId).child("SOS Alerts").push()
-            .setValue(sosData)
+        database.reference.child("sos_alerts").push().setValue(sosData)
             .addOnSuccessListener {
                 Toast.makeText(this, "SOS Alert Sent!", Toast.LENGTH_SHORT).show()
             }

@@ -1,11 +1,15 @@
 package com.kalpesh.women_safety
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.telephony.SmsManager
+import android.os.PowerManager
 import android.util.Log
-import android.widget.*
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -17,17 +21,15 @@ import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlin.math.abs
 
 class ErisActivity : AppCompatActivity() {
-    private lateinit var cameraExecutor: ExecutorService
     private lateinit var viewFinder: PreviewView
     private lateinit var gestureStatus: TextView
     private lateinit var calibrateButton: Button
     private lateinit var toggleDetectionButton: Button
     private lateinit var instructionsText: TextView
+    private lateinit var cameraExecutor: ExecutorService
 
-    // Detection state
     private var isCalibrating = false
     private var isDetecting = false
     private var calibrationBlinkPattern = mutableListOf<Long>()
@@ -35,21 +37,13 @@ class ErisActivity : AppCompatActivity() {
     private var lastBlinkTime: Long = 0
     private var blinkCount = 0
 
-    // Emergency contact
-    private val emergencyContact = "YOUR_EMERGENCY_CONTACT_NUMBER" // Replace with actual number
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_eris)
 
         initializeViews()
         setupButtons()
-
-        if (!allPermissionsGranted()) {
-            requestPermissions()
-        } else {
-            startCamera()
-        }
+        checkPermissions()
 
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
@@ -68,11 +62,29 @@ class ErisActivity : AppCompatActivity() {
         }
 
         toggleDetectionButton.setOnClickListener {
-            if (calibrationBlinkPattern.isEmpty()) {
-                Toast.makeText(this, "Please calibrate first", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
             toggleDetection()
+        }
+    }
+
+    private fun checkPermissions() {
+        val requiredPermissions = mutableListOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.VIBRATE
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requiredPermissions.add(Manifest.permission.POST_NOTIFICATIONS)
+        }
+
+        val permissionsToRequest = requiredPermissions.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }.toTypedArray()
+
+        if (permissionsToRequest.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionsToRequest, PERMISSION_REQUEST_CODE)
+        } else {
+            startCamera()
         }
     }
 
@@ -86,11 +98,59 @@ class ErisActivity : AppCompatActivity() {
         toggleDetectionButton.text = "Start Detection"
     }
 
+    private fun startBackgroundDetection() {
+        val serviceIntent = Intent(this, SOSDetectionService::class.java).apply {
+            action = "START_DETECTION"
+            putExtra("calibrationPattern", calibrationBlinkPattern.toLongArray())
+        }
+
+        requestBatteryOptimizationExemption()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
+
+        Toast.makeText(this, "Background detection started", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun stopBackgroundDetection() {
+        val serviceIntent = Intent(this, SOSDetectionService::class.java).apply {
+            action = "STOP_DETECTION"
+        }
+        stopService(serviceIntent)
+        Toast.makeText(this, "Detection stopped", Toast.LENGTH_SHORT).show()
+    }
+
     private fun toggleDetection() {
         isDetecting = !isDetecting
-        isCalibrating = false
+        if (isDetecting) {
+            if (calibrationBlinkPattern.isEmpty()) {
+                Toast.makeText(this, "Please calibrate first", Toast.LENGTH_SHORT).show()
+                isDetecting = false
+                return
+            }
+            startBackgroundDetection()
+        } else {
+            stopBackgroundDetection()
+        }
         toggleDetectionButton.text = if (isDetecting) "Stop Detection" else "Start Detection"
         gestureStatus.text = if (isDetecting) "Detection Active" else "Detection Stopped"
+    }
+
+    private fun requestBatteryOptimizationExemption() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val packageName = packageName
+            val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+            if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
+                val intent = Intent().apply {
+                    action = android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                    data = android.net.Uri.parse("package:$packageName")
+                }
+                startActivity(intent)
+            }
+        }
     }
 
     private fun startCamera() {
@@ -118,22 +178,22 @@ class ErisActivity : AppCompatActivity() {
                 // Select front camera
                 val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
 
-                // Unbind use cases before rebinding
-                cameraProvider.unbindAll()
-
-                // Bind use cases to camera
-                cameraProvider.bindToLifecycle(
-                    this,
-                    cameraSelector,
-                    preview,
-                    imageAnalyzer
-                )
-
-                Log.d(TAG, "Camera started successfully")
+                try {
+                    cameraProvider.unbindAll()
+                    cameraProvider.bindToLifecycle(
+                        this,
+                        cameraSelector,
+                        preview,
+                        imageAnalyzer
+                    )
+                } catch (exc: Exception) {
+                    Log.e(TAG, "Use case binding failed", exc)
+                    Toast.makeText(this, "Camera initialization failed", Toast.LENGTH_SHORT).show()
+                }
 
             } catch (exc: Exception) {
-                Log.e(TAG, "Use case binding failed", exc)
-                Toast.makeText(this, "Failed to open camera: ${exc.message}", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "Camera initialization failed", exc)
+                Toast.makeText(this, "Camera initialization failed", Toast.LENGTH_SHORT).show()
             }
         }, ContextCompat.getMainExecutor(this))
     }
@@ -186,8 +246,6 @@ class ErisActivity : AppCompatActivity() {
         if (currentTime - lastBlinkTime > 500) { // Prevent multiple detections for same blink
             if (isCalibrating) {
                 handleCalibrationBlink(currentTime)
-            } else if (isDetecting) {
-                handleDetectionBlink(currentTime)
             }
             lastBlinkTime = currentTime
         }
@@ -201,78 +259,12 @@ class ErisActivity : AppCompatActivity() {
 
         if (blinkCount >= 3) {
             isCalibrating = false
+            Toast.makeText(this, "Calibration Complete!", Toast.LENGTH_SHORT).show()
             gestureStatus.text = "Calibration Complete!"
             instructionsText.text = "Pattern stored. Tap 'Start Detection' to begin monitoring"
         } else {
             gestureStatus.text = "Calibrating: ${3 - blinkCount} blinks remaining..."
         }
-    }
-
-    private fun handleDetectionBlink(currentTime: Long) {
-        currentBlinkPattern.add(currentTime - lastBlinkTime)
-
-        // Keep only the last 2 intervals (3 blinks)
-        if (currentBlinkPattern.size > 2) {
-            currentBlinkPattern.removeAt(0)
-        }
-
-        // Check if pattern matches calibration
-        if (currentBlinkPattern.size == 2 && patternsMatch()) {
-            sendSOS()
-            currentBlinkPattern.clear()
-        }
-    }
-
-    private fun patternsMatch(): Boolean {
-        if (calibrationBlinkPattern.size < 2) return false
-
-        // Compare intervals between blinks
-        for (i in currentBlinkPattern.indices) {
-            val calibrationInterval = calibrationBlinkPattern[i]
-            val currentInterval = currentBlinkPattern[i]
-
-            // Allow 50% tolerance in timing
-            if (abs(calibrationInterval - currentInterval) > calibrationInterval * 0.5) {
-                return false
-            }
-        }
-        return true
-    }
-
-    private fun sendSOS() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.SEND_SMS
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            try {
-                val smsManager = SmsManager.getDefault()
-                smsManager.sendTextMessage(
-                    emergencyContact,
-                    null,
-                    "SOS ALERT: Emergency assistance needed",
-                    null,
-                    null
-                )
-                Toast.makeText(this, "SOS Alert Sent!", Toast.LENGTH_LONG).show()
-            } catch (e: Exception) {
-                Toast.makeText(this, "Failed to send SOS: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.SEND_SMS),
-                SMS_PERMISSION_CODE
-            )
-        }
-    }
-
-    private fun requestPermissions() {
-        ActivityCompat.requestPermissions(
-            this,
-            REQUIRED_PERMISSIONS,
-            REQUEST_CODE_PERMISSIONS
-        )
     }
 
     override fun onRequestPermissionsResult(
@@ -281,18 +273,14 @@ class ErisActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (allPermissionsGranted()) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                 startCamera()
             } else {
-                Toast.makeText(this, "Permissions not granted.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Permissions required for app functionality", Toast.LENGTH_LONG).show()
                 finish()
             }
         }
-    }
-
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onDestroy() {
@@ -301,12 +289,7 @@ class ErisActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val TAG = "SOSDetectionActivity"
-        private const val REQUEST_CODE_PERMISSIONS = 10
-        private const val SMS_PERMISSION_CODE = 11
-        private val REQUIRED_PERMISSIONS = arrayOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.SEND_SMS
-        )
+        private const val TAG = "ErisActivity"
+        private const val PERMISSION_REQUEST_CODE = 123
     }
 }
