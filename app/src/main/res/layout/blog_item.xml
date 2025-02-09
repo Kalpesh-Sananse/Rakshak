@@ -1,33 +1,57 @@
-<LinearLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp"
-    android:layout_margin="10dp"
-    android:background="@drawable/edittext_bg"
-   >
+    android:layout_margin="12dp"
+    android:elevation="6dp"
+    card_view:cardCornerRadius="12dp"
+    android:clipToPadding="false"
+    android:clipChildren="false">
 
-    <ImageView
-        android:id="@+id/ivBlogImage"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:contentDescription="blog image" />
-
-    <TextView
-        android:id="@+id/tvBlogTitle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:paddingTop="8dp"
-        android:paddingBottom="4dp" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvBlogBody"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:lineSpacingExtra="4dp" />
-</LinearLayout>
+        <!-- Blog Image -->
+        <ImageView
+            android:id="@+id/ivBlogImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="Blog image" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Blog Title -->
+            <TextView
+                android:id="@+id/tvBlogTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:paddingTop="8dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <!-- Blog Body -->
+            <TextView
+                android:id="@+id/tvBlogBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:lineSpacingExtra="6dp"
+                android:textColor="@color/black"
+                android:padding="12dp"
+                android:maxLines="3"
+                android:ellipsize="end" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
