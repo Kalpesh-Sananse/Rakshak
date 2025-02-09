@@ -14,6 +14,6 @@
         android:title="Chatbot" />
     <item
         android:id="@+id/nav_profilee"
-        android:icon="@drawable/baseline_person_24"
+        android:icon="@drawable/sosimg"
         android:title="Profile"/>
 </menu>

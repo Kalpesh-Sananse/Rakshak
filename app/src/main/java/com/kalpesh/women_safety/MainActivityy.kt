@@ -1,16 +1,15 @@
 package com.kalpesh.women_safety
 
 import android.Manifest
+import android.R.attr
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.app.PendingIntent
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.location.Location
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
@@ -20,6 +19,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -28,6 +28,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import java.util.Locale
+
 
 class MainActivityy : AppCompatActivity() {
 
@@ -41,7 +43,8 @@ class MainActivityy : AppCompatActivity() {
     private val database = FirebaseDatabase.getInstance()
     private val auth = FirebaseAuth.getInstance()
     private var isVoiceSOSActive = false
-    private val predefinedWords = listOf("help", "help me", "danger", "bacchao muze")
+    private val predefinedWords = listOf("help", "help me", "danger","बचाओ", "बचाओ मुझे", "सहायता", "खतरा",
+        "वाचवा", "मदत करा", "धोक्याचा इशारा", "मदत" )
     val policePhoneNumber = "+918767932356"
 
     companion object {
@@ -114,10 +117,13 @@ class MainActivityy : AppCompatActivity() {
                 }
                 R.id.nav_chatbot -> {
                     try {
-                        val url = "https://wa.me/+14155238886?text=Hello" // Your WhatsApp number
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(url)
+                        val intent = Intent(this, ChatbotActivity::class.java)
                         startActivity(intent)
+                        true
+//                        val url = "https://wa.me/+14155238886?text=Hello" // Your WhatsApp number
+//                        val intent = Intent(Intent.ACTION_VIEW)
+//                        intent.data = Uri.parse(url)
+//                        startActivity(intent)
 
                     } catch (e: Exception) {
                         Toast.makeText(this, "WhatsApp is not installed!", Toast.LENGTH_SHORT).show()
@@ -125,7 +131,7 @@ class MainActivityy : AppCompatActivity() {
                     true
                 }
                 R.id.nav_profilee -> {
-                    val intent = Intent(this, profileActivity::class.java) // Replace with your ProfileActivity
+                    val intent = Intent(this, ErisActivity::class.java) // Replace with your ProfileActivity
                     startActivity(intent)
                     true
                 }
@@ -176,11 +182,19 @@ class MainActivityy : AppCompatActivity() {
         }
     }
 
+    private val languages = listOf("en-US", "hi-IN", "mr-IN")
+    private var currentLanguageIndex = 0
+
+
     private fun startVoiceRecognition() {
+        val selectedLanguage = languages[currentLanguageIndex]
+
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US")
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, selectedLanguage)
+            putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
         }
+
 
         speechRecognizer.setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {
@@ -242,9 +256,21 @@ class MainActivityy : AppCompatActivity() {
             }
         }
     }
-
-    private fun sendSOSAlert(location: Location) {
+    // Function to Send SOS Alert
+    fun sendSOSAlert(location: Location) {
         val userId = auth.currentUser?.uid ?: return
+        val sosMessage = "SOS! I am in danger. My current location: " +
+                "https://maps.google.com/?q=${location.latitude},${location.longitude}"
+
+
+        // List of emergency contacts (replace with real numbers)
+        val emergencyContacts = listOf("8010944027", "8767932356")
+
+        for (contact in emergencyContacts) {
+            sendSMS(contact, sosMessage)
+        }
+
+        // Storing SOS alert data in Firebase (Optional)
         val sosData = mapOf(
             "latitude" to location.latitude,
             "longitude" to location.longitude,
@@ -252,91 +278,44 @@ class MainActivityy : AppCompatActivity() {
             "userId" to userId
         )
 
-        database.reference.child("Users").child(userId).get().addOnSuccessListener { dataSnapshot ->
-            val emergencyContact1 = dataSnapshot.child("emergencyContact1").value?.toString()
-            val emergencyContact2 = dataSnapshot.child("emergencyContact2").value?.toString()
-
-            if (emergencyContact1 != null || emergencyContact2 != null) {
-                val message = "🚨 SOS Alert!\n" +
-                        "Latitude: ${location.latitude}, Longitude: ${location.longitude}\n" +
-                        "Google Maps Link: https://maps.google.com/?q=${location.latitude},${location.longitude}\n" +
-                        "Please send help immediately!"
-
-                emergencyContact1?.let { sendSMSWithReceiver(it, message) }
-                emergencyContact2?.let { sendSMSWithReceiver(it, message) }
-
+        database.reference.child("sos_alerts").push().setValue(sosData)
+            .addOnSuccessListener {
+                Toast.makeText(this, "SOS Alert Sent!", Toast.LENGTH_SHORT).show()
             }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to send SOS alert.", Toast.LENGTH_SHORT).show()
+            }
+    }
 
-            // Save the SOS alert data to Firebase
-            database.reference.child("sos_alerts").push().setValue(sosData)
-                .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        showSuccessDialog()
-                    } else {
-                        Toast.makeText(this, "Failed to send SOS alert.", Toast.LENGTH_SHORT).show()
-                    }
-                }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Failed to fetch user data.", Toast.LENGTH_SHORT).show()
+
+    private fun sendSMS(phoneNumber: String, message: String) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.SEND_SMS), 1)
+        } else {
+            try {
+                val smsManager = SmsManager.getDefault()
+                smsManager.sendTextMessage(phoneNumber, null, message, null, null)
+                Toast.makeText(this, "SOS SMS Sent to $phoneNumber", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this, "Failed to send SMS!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    private fun sendSMSWithReceiver(phoneNumber: String, message: String) {
-        val context = this // Use `this` in Activity, or `requireContext()` in Fragment
-
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            Toast.makeText(context, "SMS permission not granted", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        try {
-            val smsManager = SmsManager.getDefault()
-
-            val sentIntent = PendingIntent.getBroadcast(
-                context, 0, Intent("SMS_SENT"),
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-
-            val deliveredIntent = PendingIntent.getBroadcast(
-                context, 0, Intent("SMS_DELIVERED"),
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-
-            smsManager.sendTextMessage(phoneNumber, null, message, sentIntent, deliveredIntent)
-
-            val sentReceiver = object : BroadcastReceiver() {
-                override fun onReceive(context: Context?, intent: Intent?) {
-                    when (resultCode) {
-                        RESULT_OK -> Toast.makeText(context, "SMS sent to $phoneNumber", Toast.LENGTH_SHORT).show()
-                        SmsManager.RESULT_ERROR_GENERIC_FAILURE -> Toast.makeText(context, "Generic failure", Toast.LENGTH_SHORT).show()
-                        SmsManager.RESULT_ERROR_NO_SERVICE -> Toast.makeText(context, "No service available", Toast.LENGTH_SHORT).show()
-                        SmsManager.RESULT_ERROR_NULL_PDU -> Toast.makeText(context, "Null PDU", Toast.LENGTH_SHORT).show()
-                        SmsManager.RESULT_ERROR_RADIO_OFF -> Toast.makeText(context, "Radio off", Toast.LENGTH_SHORT).show()
-                    }
-                    context?.unregisterReceiver(this)
-                }
-            }
-
-            val deliveredReceiver = object : BroadcastReceiver() {
-                override fun onReceive(context: Context?, intent: Intent?) {
-                    when (resultCode) {
-                        RESULT_OK -> Toast.makeText(context, "SMS delivered", Toast.LENGTH_SHORT).show()
-                        RESULT_CANCELED -> Toast.makeText(context, "SMS not delivered", Toast.LENGTH_SHORT).show()
-                    }
-                    context?.unregisterReceiver(this)
-                }
-            }
-
-            context.registerReceiver(sentReceiver, IntentFilter("SMS_SENT"))
-            context.registerReceiver(deliveredReceiver, IntentFilter("SMS_DELIVERED"))
-
-        } catch (e: Exception) {
-            Log.e("SOS", "Error sending SMS: ${e.message}")
-            Toast.makeText(this, "Failed to send SMS", Toast.LENGTH_SHORT).show()
-        }
+    // Function to Request SMS Permission
+    private fun requestSmsPermission() {
+        ActivityCompat.requestPermissions(this@MainActivityy, arrayOf(Manifest.permission.SEND_SMS), 100)
     }
+
+    // Backup Function: Open Default SMS App
+    private fun openSMSApp(phoneNumber: String, message: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:$phoneNumber"))
+        intent.putExtra("sms_body", message)
+        this@MainActivityy.startActivity(intent)
+    }
+
 
 
     private fun showSuccessDialog() {
