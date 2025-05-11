@@ -1,4 +1,12 @@
-# Rakshak - Women Safety Application
+# 🚨 Rakshak - Women Safety Application
+
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/)
+[![Made with Kotlin](https://img.shields.io/badge/Made%20with-Kotlin-blueviolet)](https://kotlinlang.org/)
+[![Backend: IBM Cloud](https://img.shields.io/badge/Backend-IBM%20Cloud-blue)](https://www.ibm.com/cloud)
+[![Firebase](https://img.shields.io/badge/Realtime%20Database-Firebase-orange)](https://firebase.google.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+---
 
 ## Overview
 
@@ -8,23 +16,23 @@
 
 ## Features
 
-### 1. **Voice-Activated SOS**
+### 🚨 **Voice-Activated SOS**
    - Continuously listens for a predefined SOS keyword without storing audio.
    - Automatically triggers alerts and shares real-time location with emergency contacts and responders.
 
-### 2. **Manual SOS Trigger**
+### 🆘 **Manual SOS Trigger**
    - Allows users to manually trigger an SOS by pressing a button.
    - Sends real-time location updates to emergency contacts, police, hospitals, and nurses.
 
-### 3. **AI-Powered Emergency Handling**
+### 🤖 **AI-Powered Emergency Handling**
    - Utilizes AI for analyzing distress situations and providing intelligent responses.
    - LLM models assist users with guidance during emergencies.
 
-### 4. **Real-Time Location Sharing**
+### 📍 **Real-Time Location Sharing**
    - Shares the user’s live location with predefined emergency contacts and responders.
    - Clustering algorithm identifies and notifies the nearest responders (police, hospitals, nurses).
 
-### 5. **Scalability for Senior Citizens**
+### 👵 **Scalability for Senior Citizens**
    - Extended functionality for senior citizens, allowing them to call for help during medical emergencies.
    - A dedicated nurse application enables healthcare providers to receive alerts and respond efficiently.
 
@@ -32,35 +40,35 @@
 
 ## Technology Stack
 
-- **IBM Cloud**: Backend services, AI model deployment, and cloud storage.
-- **Firebase**: Real-time database, authentication, and cloud messaging.
-- **Google Maps API**: Real-time location tracking.
-- **Large Language Models (LLMs)**: Used for voice recognition and intelligent emergency responses.
+- 🌐 **IBM Cloud**: Backend services, AI model deployment, and cloud storage.
+- ⚡ **Firebase**: Real-time database, authentication, and cloud messaging.
+- 🗺️ **Google Maps API**: Real-time location tracking.
+- 🧠 **Large Language Models (LLMs)**: Used for voice recognition and intelligent emergency responses.
 
 ---
 
 ## System Architecture
 
-- **Mobile App**: Developed for Android (Kotlin) and Flutter (cross-platform).
-- **Backend Services**: Deployed on IBM Cloud to handle user authentication, emergency alerts, and AI-based processing.
-- **Real-Time Database & Notifications**: Managed using Firebase.
-- **Admin Dashboard**: Web-based panel for monitoring and managing SOS alerts and responders.
+- 📱 **Mobile App**: Developed for Android (Kotlin) and Flutter (cross-platform).
+- ☁️ **Backend Services**: Deployed on IBM Cloud to handle user authentication, emergency alerts, and AI-based processing.
+- 🔔 **Real-Time Database & Notifications**: Managed using Firebase.
+- 🌐 **Admin Dashboard**: Web-based panel for monitoring and managing SOS alerts and responders.
 
 ---
 
 ## Deployment
 
-- **Mobile Application**: Available on Google Play Store and iOS App Store.
-- **Backend Services**: Hosted on IBM Cloud Functions for scalability and high availability.
-- **Real-Time Database**: Firebase for instant SOS notifications.
+- 📱 **Mobile Application**: Available on Google Play Store and iOS App Store.
+- ☁️ **Backend Services**: Hosted on IBM Cloud Functions for scalability and high availability.
+- ⚡ **Real-Time Database**: Firebase for instant SOS notifications.
 
 ---
 
 ## Future Scope
 
-- **Public Camera Integration**: Deploy cameras in public spaces for automatic detection of distress situations.
-- **Child and Senior Citizen Safety**: Expand functionality for children and senior citizens with unique safety features.
-- **Advanced Language Support**: Integrate multilingual support for global accessibility.
+- 🎥 **Public Camera Integration**: Deploy cameras in public spaces for automatic detection of distress situations.
+- 👶👵 **Child and Senior Citizen Safety**: Expand functionality for children and senior citizens with unique safety features.
+- 🌍 **Advanced Language Support**: Integrate multilingual support for global accessibility.
 
 ---
 
