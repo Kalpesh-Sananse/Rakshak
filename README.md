@@ -56,9 +56,7 @@
 
 ---
 
-### App Screenshots:
-
-<h3>📸 Screenshots</h3>
+### 📸 Screenshots:
 
 <table>
   <tr>
